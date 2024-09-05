@@ -1,1 +1,36 @@
-nav
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/SSHFragment">
+
+    <fragment
+        android:id="@+id/SSHFragment"
+        android:name="com.example.androiddevtoolapp.SSHFragment"
+        android:label="SSH"
+        tools:layout="@layout/fragment_ssh" />
+
+    <fragment
+        android:id="@+id/GitHubRepoFragment"
+        android:name="com.example.androiddevtoolapp.GitHubRepoFragment"
+        android:label="GitHub Repository"
+        tools:layout="@layout/fragment_github_repo" />
+
+    <fragment
+        android:id="@+id/GitHubActionsFragment"
+        android:name="com.example.androiddevtoolapp.GitHubActionsFragment"
+        android:label="GitHub Actions"
+        tools:layout="@layout/fragment_github_actions" />
+
+    <fragment
+        android:id="@+id/CommandsFragment"
+        android:name="com.example.androiddevtoolapp.CommandsFragment"
+        android:label="Commands"
+        tools:layout="@layout/fragment_commands" />
+
+    <fragment
+        android:id="@+id/FileManagementFragment"
+        android:name="com.example.androiddevtoolapp.FileManagementFragment"
+        android:label="File Management"
+        tools:layout="@layout/fragment_file_management" />
+</navigation>
