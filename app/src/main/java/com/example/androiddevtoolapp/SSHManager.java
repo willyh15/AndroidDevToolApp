@@ -1,6 +1,11 @@
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class SSHManager {
 
@@ -39,6 +44,58 @@ public class SSHManager {
     public void disconnect() {
         if (session != null && session.isConnected()) {
             session.disconnect();
+        }
+    }
+
+    public boolean uploadFile(String localFilePath, String remoteFilePath) {
+        try {
+            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            channel.setCommand("scp -t " + remoteFilePath);
+            OutputStream out = channel.getOutputStream();
+            channel.connect();
+
+            FileInputStream fis = new FileInputStream(localFilePath);
+            byte[] buffer = new byte[1024];
+            int len;
+
+            while ((len = fis.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+
+            fis.close();
+            out.close();
+            channel.disconnect();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean downloadFile(String remoteFilePath, String localFilePath) {
+        try {
+            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            channel.setCommand("scp -f " + remoteFilePath);
+            OutputStream out = channel.getOutputStream();
+            FileOutputStream fos = new FileOutputStream(localFilePath);
+            byte[] buffer = new byte[1024];
+            int len;
+
+            channel.connect();
+
+            while ((len = channel.getInputStream().read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
+            }
+
+            fos.close();
+            out.close();
+            channel.disconnect();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
