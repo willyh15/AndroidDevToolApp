@@ -38,4 +38,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Download File" />
+
+    <EditText
+        android:id="@+id/editTextFileContent"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="File Content"
+        android:gravity="top" />
+
+    <Button
+        android:id="@+id/buttonEditFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit File" />
+
+    <Button
+        android:id="@+id/buttonSaveFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save File" />
 </LinearLayout>
