@@ -2,9 +2,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 public class SSHManager {
@@ -23,11 +21,25 @@ public class SSHManager {
         return instance;
     }
 
-    public boolean connect(String host, String username, String password) {
+    public boolean connectWithPassword(String host, String username, String password) {
         try {
             JSch jsch = new JSch();
             session = jsch.getSession(username, host, 22);
             session.setPassword(password);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+            return true;
+        } catch (JSchException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean connectWithKey(String host, String username, String privateKeyPath) {
+        try {
+            JSch jsch = new JSch();
+            jsch.addIdentity(privateKeyPath);
+            session = jsch.getSession(username, host, 22);
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
             return true;
