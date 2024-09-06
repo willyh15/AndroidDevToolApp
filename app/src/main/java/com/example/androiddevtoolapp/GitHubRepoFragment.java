@@ -1,4 +1,5 @@
-import android.os.AsyncTask;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,6 +22,11 @@ public class GitHubRepoFragment extends Fragment {
     private EditText editTextRepoPath, editTextFilePath;
     private Button buttonUploadToGitHub;
     private GitHubService gitHubService;
+    private KeystoreManager keystoreManager;
+    private SharedPreferences sharedPreferences;
+
+    private static final String PREFS_NAME = "GitHubPrefs";
+    private static final String GITHUB_TOKEN_KEY = "GitHubToken";
 
     public GitHubRepoFragment() {
         // Required empty public constructor
@@ -38,6 +42,10 @@ public class GitHubRepoFragment extends Fragment {
         editTextFilePath = view.findViewById(R.id.editTextFilePath);
         buttonUploadToGitHub = view.findViewById(R.id.buttonUploadToGitHub);
 
+        // Initialize KeystoreManager and SharedPreferences
+        keystoreManager = new KeystoreManager(getContext());
+        sharedPreferences = getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
         buttonUploadToGitHub.setOnClickListener(v -> {
             String repoPath = editTextRepoPath.getText().toString();
             String filePath = editTextFilePath.getText().toString();
@@ -51,10 +59,33 @@ public class GitHubRepoFragment extends Fragment {
         return view;
     }
 
+    // Method to store the encrypted GitHub token
+    private void storeGitHubToken(String token) {
+        String encryptedToken = keystoreManager.encryptData(token);
+        sharedPreferences.edit().putString(GITHUB_TOKEN_KEY, encryptedToken).apply();
+    }
+
+    // Method to retrieve and decrypt the GitHub token
+    private String getGitHubToken() {
+        String encryptedToken = sharedPreferences.getString(GITHUB_TOKEN_KEY, null);
+        if (encryptedToken != null) {
+            return keystoreManager.decryptData(encryptedToken);
+        } else {
+            Toast.makeText(getContext(), "GitHub token not found", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
     private void uploadFileToGitHub(String owner, String repo, String path, String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             Toast.makeText(getContext(), "File does not exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String token = getGitHubToken();
+        if (token == null) {
+            Toast.makeText(getContext(), "GitHub token is missing", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -65,6 +96,7 @@ public class GitHubRepoFragment extends Fragment {
             String body = "{ \"message\": \"Upload file via app\", \"content\": \"" + fileContentBase64 + "\" }";
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), body);
 
+            // Use the token in your GitHub API request headers
             gitHubService.uploadFile(owner, repo, path, requestBody).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
