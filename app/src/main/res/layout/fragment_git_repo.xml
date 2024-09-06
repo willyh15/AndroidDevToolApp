@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextRepoPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Repository Path" />
+
+    <Button
+        android:id="@+id/buttonInitRepo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Initialize Repository" />
+
+    <EditText
+        android:id="@+id/editTextCommitMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Commit Message" />
+
+    <Button
+        android:id="@+id/buttonCommit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Commit Changes" />
+
+    <EditText
+        android:id="@+id/editTextBranchName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Branch Name" />
+
+    <Button
+        android:id="@+id/buttonCreateBranch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Branch" />
+
+    <Button
+        android:id="@+id/buttonCheckoutBranch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Checkout Branch" />
+
+    <Button
+        android:id="@+id/buttonMergeBranch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Merge Branch" />
+</LinearLayout>
