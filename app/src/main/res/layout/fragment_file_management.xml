@@ -14,4 +14,28 @@
         android:id="@+id/listViewFiles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editTextLocalFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Local File Path" />
+
+    <EditText
+        android:id="@+id/editTextRemoteFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Remote File Path" />
+
+    <Button
+        android:id="@+id/buttonUploadFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload File" />
+
+    <Button
+        android:id="@+id/buttonDownloadFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download File" />
 </LinearLayout>
