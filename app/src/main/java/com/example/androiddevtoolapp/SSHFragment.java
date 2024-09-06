@@ -7,14 +7,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class SSHFragment extends Fragment {
 
-    private EditText editTextHost, editTextUsername, editTextPassword;
-    private Button buttonConnect;
+    private EditText editTextHost, editTextUsername, editTextPassword, editTextCommand;
+    private Button buttonConnect, buttonExecuteCommand;
+    private Session session;
 
     public SSHFragment() {
         // Required empty public constructor
@@ -29,7 +33,9 @@ public class SSHFragment extends Fragment {
         editTextHost = view.findViewById(R.id.editTextHost);
         editTextUsername = view.findViewById(R.id.editTextUsername);
         editTextPassword = view.findViewById(R.id.editTextPassword);
+        editTextCommand = view.findViewById(R.id.editTextCommand);
         buttonConnect = view.findViewById(R.id.buttonConnect);
+        buttonExecuteCommand = view.findViewById(R.id.buttonExecuteCommand);
 
         buttonConnect.setOnClickListener(v -> {
             // Collect SSH credentials
@@ -42,6 +48,19 @@ public class SSHFragment extends Fragment {
             } else {
                 // Attempt SSH connection
                 new SSHConnectTask().execute(host, username, password);
+            }
+        });
+
+        buttonExecuteCommand.setOnClickListener(v -> {
+            if (session != null && session.isConnected()) {
+                String command = editTextCommand.getText().toString();
+                if (!command.isEmpty()) {
+                    new SSHCommandTask().execute(command);
+                } else {
+                    Toast.makeText(getContext(), "Please enter a command to execute", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Not connected. Please connect first.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -58,7 +77,7 @@ public class SSHFragment extends Fragment {
 
             try {
                 JSch jsch = new JSch();
-                Session session = jsch.getSession(username, host, 22);
+                session = jsch.getSession(username, host, 22);
                 session.setPassword(password);
 
                 // Avoid asking for key confirmation
@@ -66,9 +85,6 @@ public class SSHFragment extends Fragment {
 
                 // Connect to the server
                 session.connect();
-
-                // If we reach here, the connection was successful
-                session.disconnect();
                 return true;
 
             } catch (JSchException e) {
@@ -84,6 +100,39 @@ public class SSHFragment extends Fragment {
             } else {
                 Toast.makeText(getContext(), "Failed to connect. Please check your credentials.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private class SSHCommandTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... commands) {
+            StringBuilder output = new StringBuilder();
+
+            try {
+                ChannelExec channel = (ChannelExec) session.openChannel("exec");
+                channel.setCommand(commands[0]);
+                channel.setErrStream(System.err);
+                channel.connect();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+
+                channel.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+                output.append("Error: ").append(e.getMessage());
+            }
+
+            return output.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
         }
     }
 }
