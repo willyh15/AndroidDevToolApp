@@ -1,1 +1,23 @@
-project level
+// Root-level build.gradle file
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.0.2'  // Use the latest version or the version compatible with your project
+        // Add other classpaths here if needed
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
