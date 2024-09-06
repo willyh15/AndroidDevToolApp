@@ -1,21 +1,20 @@
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSchException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class SSHFragment extends Fragment {
 
-    private EditText editTextHost, editTextUsername, editTextPassword, editTextCommand, editTextExecuteFilePath;
-    private Button buttonConnect, buttonExecuteCommand, buttonExecuteFile;
+    private EditText editTextHost, editTextUsername, editTextPassword, editTextPrivateKey;
+    private RadioGroup radioGroupAuth;
+    private RadioButton radioButtonPassword, radioButtonKey;
+    private Button buttonConnect;
 
     public SSHFragment() {
         // Required empty public constructor
@@ -30,51 +29,71 @@ public class SSHFragment extends Fragment {
         editTextHost = view.findViewById(R.id.editTextHost);
         editTextUsername = view.findViewById(R.id.editTextUsername);
         editTextPassword = view.findViewById(R.id.editTextPassword);
-        editTextCommand = view.findViewById(R.id.editTextCommand);
-        editTextExecuteFilePath = view.findViewById(R.id.editTextExecuteFilePath);
+        editTextPrivateKey = view.findViewById(R.id.editTextPrivateKey);
+        radioGroupAuth = view.findViewById(R.id.radioGroupAuth);
+        radioButtonPassword = view.findViewById(R.id.radioButtonPassword);
+        radioButtonKey = view.findViewById(R.id.radioButtonKey);
         buttonConnect = view.findViewById(R.id.buttonConnect);
-        buttonExecuteCommand = view.findViewById(R.id.buttonExecuteCommand);
-        buttonExecuteFile = view.findViewById(R.id.buttonExecuteFile);
 
-        buttonExecuteFile.setOnClickListener(v -> {
-            String filePath = editTextExecuteFilePath.getText().toString();
-            if (filePath.isEmpty()) {
-                Toast.makeText(getContext(), "Please enter a file path to execute", Toast.LENGTH_SHORT).show();
-            } else {
-                new SSHExecuteFileTask().execute(filePath);
+        radioGroupAuth.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioButtonPassword) {
+                editTextPassword.setVisibility(View.VISIBLE);
+                editTextPrivateKey.setVisibility(View.GONE);
+            } else if (checkedId == R.id.radioButtonKey) {
+                editTextPassword.setVisibility(View.GONE);
+                editTextPrivateKey.setVisibility(View.VISIBLE);
+            }
+        });
+
+        buttonConnect.setOnClickListener(v -> {
+            String host = editTextHost.getText().toString();
+            String username = editTextUsername.getText().toString();
+            
+            if (radioButtonPassword.isChecked()) {
+                String password = editTextPassword.getText().toString();
+                if (host.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    new SSHConnectTask().execute(host, username, password, "password");
+                }
+            } else if (radioButtonKey.isChecked()) {
+                String privateKeyPath = editTextPrivateKey.getText().toString();
+                if (host.isEmpty() || username.isEmpty() || privateKeyPath.isEmpty()) {
+                    Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    new SSHConnectTask().execute(host, username, privateKeyPath, "key");
+                }
             }
         });
 
         return view;
     }
 
-    private class SSHExecuteFileTask extends AsyncTask<String, Void, String> {
+    private class SSHConnectTask extends AsyncTask<String, Void, Boolean> {
+
         @Override
-        protected String doInBackground(String... filePaths) {
-            String filePath = filePaths[0];
-            StringBuilder output = new StringBuilder();
-            try {
-                ChannelExec channel = (ChannelExec) SSHManager.getInstance().getSession().openChannel("exec");
-                channel.setCommand("bash " + filePath);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(channel.getInputStream()));
-                channel.connect();
+        protected Boolean doInBackground(String... params) {
+            String host = params[0];
+            String username = params[1];
+            String credential = params[2];
+            String authType = params[3];
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line).append("\n");
-                }
-
-                channel.disconnect();
-            } catch (JSchException | IOException e) {
-                e.printStackTrace();
-                output.append("Error: ").append(e.getMessage());
+            if ("password".equals(authType)) {
+                return SSHManager.getInstance().connectWithPassword(host, username, credential);
+            } else if ("key".equals(authType)) {
+                return SSHManager.getInstance().connectWithKey(host, username, credential);
             }
-            return output.toString();
+
+            return false;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                Toast.makeText(getContext(), "Connected successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Failed to connect. Please check your credentials.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
