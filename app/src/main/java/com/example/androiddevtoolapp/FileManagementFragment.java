@@ -10,15 +10,19 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileManagementFragment extends Fragment {
 
-    private Button buttonListFiles, buttonUploadFile, buttonDownloadFile;
+    private Button buttonListFiles, buttonUploadFile, buttonDownloadFile, buttonEditFile, buttonSaveFile;
     private ListView listViewFiles;
-    private EditText editTextRemoteFilePath, editTextLocalFilePath;
+    private EditText editTextRemoteFilePath, editTextLocalFilePath, editTextFileContent;
     private List<String> fileList = new ArrayList<>();
+    private String currentFilePath;
 
     public FileManagementFragment() {
         // Required empty public constructor
@@ -33,17 +37,24 @@ public class FileManagementFragment extends Fragment {
         buttonListFiles = view.findViewById(R.id.buttonListFiles);
         buttonUploadFile = view.findViewById(R.id.buttonUploadFile);
         buttonDownloadFile = view.findViewById(R.id.buttonDownloadFile);
+        buttonEditFile = view.findViewById(R.id.buttonEditFile);
+        buttonSaveFile = view.findViewById(R.id.buttonSaveFile);
         listViewFiles = view.findViewById(R.id.listViewFiles);
         editTextRemoteFilePath = view.findViewById(R.id.editTextRemoteFilePath);
         editTextLocalFilePath = view.findViewById(R.id.editTextLocalFilePath);
+        editTextFileContent = view.findViewById(R.id.editTextFileContent);
 
         buttonListFiles.setOnClickListener(v -> listFiles());
         buttonUploadFile.setOnClickListener(v -> uploadFile());
         buttonDownloadFile.setOnClickListener(v -> downloadFile());
+        buttonEditFile.setOnClickListener(v -> editFile());
+        buttonSaveFile.setOnClickListener(v -> saveFile());
 
         listViewFiles.setOnItemClickListener((parent, view1, position, id) -> {
             String fileName = fileList.get(position);
-            editTextLocalFilePath.setText(new File(getContext().getFilesDir(), fileName).getAbsolutePath());
+            String filePath = new File(getContext().getFilesDir(), fileName).getAbsolutePath();
+            editTextLocalFilePath.setText(filePath);
+            currentFilePath = filePath;
         });
 
         return view;
@@ -85,6 +96,39 @@ public class FileManagementFragment extends Fragment {
             Toast.makeText(getContext(), "Please specify both local and remote file paths", Toast.LENGTH_SHORT).show();
         } else {
             new SCPDownloadTask().execute(remoteFilePath, localFilePath);
+        }
+    }
+
+    private void editFile() {
+        if (currentFilePath != null && !currentFilePath.isEmpty()) {
+            try {
+                FileInputStream fis = new FileInputStream(currentFilePath);
+                byte[] data = new byte[(int) new File(currentFilePath).length()];
+                fis.read(data);
+                fis.close();
+                editTextFileContent.setText(new String(data, "UTF-8"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Error reading file", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getContext(), "Please select a file to edit", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveFile() {
+        if (currentFilePath != null && !currentFilePath.isEmpty()) {
+            try {
+                FileOutputStream fos = new FileOutputStream(currentFilePath);
+                fos.write(editTextFileContent.getText().toString().getBytes());
+                fos.close();
+                Toast.makeText(getContext(), "File saved successfully", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Error saving file", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getContext(), "No file to save", Toast.LENGTH_SHORT).show();
         }
     }
 
