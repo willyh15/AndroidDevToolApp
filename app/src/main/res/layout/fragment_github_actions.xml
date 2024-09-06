@@ -5,8 +5,19 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/buttonManageActions"
+        android:id="@+id/buttonListWorkflows"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Manage Actions" />
+        android:text="List Workflows" />
+
+    <ListView
+        android:id="@+id/listViewWorkflows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonTriggerWorkflow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trigger Workflow" />
 </LinearLayout>
