@@ -181,4 +181,19 @@ public class SSHFragment extends Fragment {
                     output.append(line).append("\n");
                 }
 
-                channel.disconnect
+                                channel.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+                output.append("Error: ").append(e.getMessage());
+            }
+
+            return output.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+        }
+    }
+}
+
