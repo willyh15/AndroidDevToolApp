@@ -52,4 +52,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Scripts" />
+
+    <EditText
+        android:id="@+id/editTextExecuteFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="File Path to Execute" />
+
+    <Button
+        android:id="@+id/buttonExecuteFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Execute File" />
 </LinearLayout>
