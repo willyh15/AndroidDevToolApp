@@ -1,5 +1,4 @@
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,10 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -27,7 +23,6 @@ public class SSHFragment extends Fragment {
 
     private EditText editTextHost, editTextUsername, editTextPassword, editTextCommand;
     private Button buttonConnect, buttonExecuteCommand, buttonSaveScript, buttonViewScripts;
-    private Session session;
     private Map<String, String> savedScripts = new HashMap<>();
 
     public SSHFragment() {
@@ -62,10 +57,11 @@ public class SSHFragment extends Fragment {
         });
 
         buttonExecuteCommand.setOnClickListener(v -> {
+            Session session = SSHManager.getInstance().getSession();
             if (session != null && session.isConnected()) {
                 String command = editTextCommand.getText().toString();
                 if (!command.isEmpty()) {
-                    new SSHCommandTask().execute(command);
+                    new SSHCommandTask(session).execute(command);
                 } else {
                     Toast.makeText(getContext(), "Please enter a command to execute", Toast.LENGTH_SHORT).show();
                 }
@@ -128,7 +124,12 @@ public class SSHFragment extends Fragment {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String scriptName = scriptNames.get(position);
             String command = savedScripts.get(scriptName);
-            new SSHCommandTask().execute(command);
+            Session session = SSHManager.getInstance().getSession();
+            if (session != null && session.isConnected()) {
+                new SSHCommandTask(session).execute(command);
+            } else {
+                Toast.makeText(getContext(), "Not connected. Please connect first.", Toast.LENGTH_SHORT).show();
+            }
             dialog.dismiss();
         });
 
@@ -143,18 +144,7 @@ public class SSHFragment extends Fragment {
             String username = params[1];
             String password = params[2];
 
-            try {
-                JSch jsch = new JSch();
-                session = jsch.getSession(username, host, 22);
-                session.setPassword(password);
-                session.setConfig("StrictHostKeyChecking", "no");
-                session.connect();
-                return true;
-
-            } catch (JSchException e) {
-                e.printStackTrace();
-                return false;
-            }
+            return SSHManager.getInstance().connect(host, username, password);
         }
 
         @Override
@@ -168,6 +158,12 @@ public class SSHFragment extends Fragment {
     }
 
     private class SSHCommandTask extends AsyncTask<String, Void, String> {
+
+        private Session session;
+
+        public SSHCommandTask(Session session) {
+            this.session = session;
+        }
 
         @Override
         protected String doInBackground(String... commands) {
@@ -185,18 +181,4 @@ public class SSHFragment extends Fragment {
                     output.append(line).append("\n");
                 }
 
-                channel.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-                output.append("Error: ").append(e.getMessage());
-            }
-
-            return output.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-        }
-    }
-}
+                channel.disconnect
