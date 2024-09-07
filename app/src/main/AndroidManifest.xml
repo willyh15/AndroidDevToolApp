@@ -30,11 +30,11 @@
             </intent-filter>
         </activity>
 
-        <!-- Adding Workers (e.g., ScheduledTaskWorker) if needed for WorkManager -->
+        <!-- Optional: Service Declaration (if necessary for Job Intent) -->
         <service
             android:name=".ScheduledTaskWorker"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            tools:node="merge"/>
+            android:exported="false"/>
 
     </application>
 </manifest>
