@@ -1,6 +1,5 @@
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
@@ -12,6 +11,7 @@ public class GitManager {
     private Git git;
     private Repository repository;
 
+    // Initialize the repository
     public boolean initializeRepository(String repoPath) {
         try {
             File repoDir = new File(repoPath);
@@ -37,6 +37,7 @@ public class GitManager {
         }
     }
 
+    // Commit changes
     public boolean commitChanges(String message) {
         try {
             git.add().addFilepattern(".").call();
@@ -48,6 +49,7 @@ public class GitManager {
         }
     }
 
+    // Create a new branch
     public boolean createBranch(String branchName) {
         try {
             git.branchCreate().setName(branchName).call();
@@ -58,6 +60,7 @@ public class GitManager {
         }
     }
 
+    // Checkout a branch
     public boolean checkoutBranch(String branchName) {
         try {
             git.checkout().setName(branchName).call();
@@ -68,6 +71,7 @@ public class GitManager {
         }
     }
 
+    // Merge a branch
     public boolean mergeBranch(String branchName) {
         try {
             git.merge().include(git.getRepository().findRef(branchName)).call();
@@ -78,6 +82,21 @@ public class GitManager {
         }
     }
 
+    // Push changes to a remote repository (new method)
+    public boolean pushChanges(String remoteRepo, String branchName) {
+        try {
+            git.push()
+                .setRemote(remoteRepo)
+                .setRefSpecs(branchName)
+                .call();
+            return true;
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Close the repository
     public void close() {
         if (git != null) {
             git.close();
