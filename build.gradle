@@ -6,8 +6,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'  // Use the latest version or the version compatible with your project
-        // Add other classpaths here if needed
+        classpath 'com.android.tools.build:gradle:8.0.2'  // Latest gradle version
+        // Add other classpaths here if needed (e.g., Kotlin or navigation-safe-args)
     }
 }
 
