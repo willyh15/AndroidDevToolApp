@@ -1,9 +1,11 @@
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ public class SSHFragment extends Fragment {
     private RadioGroup radioGroupAuth;
     private RadioButton radioButtonPassword, radioButtonKey;
     private Button buttonConnect;
+    private ProgressBar progressBar;
 
     public SSHFragment() {
         // Required empty public constructor
@@ -34,6 +37,8 @@ public class SSHFragment extends Fragment {
         radioButtonPassword = view.findViewById(R.id.radioButtonPassword);
         radioButtonKey = view.findViewById(R.id.radioButtonKey);
         buttonConnect = view.findViewById(R.id.buttonConnect);
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE); // Initially hidden
 
         radioGroupAuth.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.radioButtonPassword) {
@@ -48,12 +53,13 @@ public class SSHFragment extends Fragment {
         buttonConnect.setOnClickListener(v -> {
             String host = editTextHost.getText().toString();
             String username = editTextUsername.getText().toString();
-            
+
             if (radioButtonPassword.isChecked()) {
                 String password = editTextPassword.getText().toString();
                 if (host.isEmpty() || username.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
+                    progressBar.setVisibility(View.VISIBLE);
                     new SSHConnectTask().execute(host, username, password, "password");
                 }
             } else if (radioButtonKey.isChecked()) {
@@ -61,6 +67,7 @@ public class SSHFragment extends Fragment {
                 if (host.isEmpty() || username.isEmpty() || privateKeyPath.isEmpty()) {
                     Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
+                    progressBar.setVisibility(View.VISIBLE);
                     new SSHConnectTask().execute(host, username, privateKeyPath, "key");
                 }
             }
@@ -89,6 +96,7 @@ public class SSHFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            progressBar.setVisibility(View.GONE);
             if (result) {
                 Toast.makeText(getContext(), "Connected successfully!", Toast.LENGTH_SHORT).show();
             } else {
