@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:hint="Enter command" />
 
+   ```xml
     <Button
         android:id="@+id/buttonExecuteCommand"
         android:layout_width="wrap_content"
