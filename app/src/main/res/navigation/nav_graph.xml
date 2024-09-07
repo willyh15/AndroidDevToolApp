@@ -4,6 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/SSHFragment">
 
+It seems like my response was cut off earlier. I’ll continue providing the full updated version of the `nav_graph.xml` file as requested.
+
+### Full Updated Version of `nav_graph.xml`
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/SSHFragment">
+
     <fragment
         android:id="@+id/SSHFragment"
         android:name="com.example.androiddevtoolapp.SSHFragment"
@@ -33,4 +44,10 @@
         android:name="com.example.androiddevtoolapp.FileManagementFragment"
         android:label="File Management"
         tools:layout="@layout/fragment_file_management" />
+
+    <fragment
+        android:id="@+id/ScheduleTaskFragment"
+        android:name="com.example.androiddevtoolapp.ScheduleTaskFragment"
+        android:label="Schedule Task"
+        tools:layout="@layout/fragment_schedule_task" />
 </navigation>
