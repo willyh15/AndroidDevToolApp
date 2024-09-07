@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import java.io.File;
@@ -21,6 +22,7 @@ public class FileManagementFragment extends Fragment {
     private Button buttonListFiles, buttonUploadFile, buttonDownloadFile, buttonEditFile, buttonSaveFile;
     private ListView listViewFiles;
     private EditText editTextRemoteFilePath, editTextLocalFilePath, editTextFileContent;
+    private ProgressBar progressBar;
     private List<String> fileList = new ArrayList<>();
     private String currentFilePath;
 
@@ -43,6 +45,9 @@ public class FileManagementFragment extends Fragment {
         editTextRemoteFilePath = view.findViewById(R.id.editTextRemoteFilePath);
         editTextLocalFilePath = view.findViewById(R.id.editTextLocalFilePath);
         editTextFileContent = view.findViewById(R.id.editTextFileContent);
+        progressBar = view.findViewById(R.id.progressBar);
+
+        progressBar.setVisibility(View.GONE); // Hide initially
 
         buttonListFiles.setOnClickListener(v -> listFiles());
         buttonUploadFile.setOnClickListener(v -> uploadFile());
@@ -61,6 +66,7 @@ public class FileManagementFragment extends Fragment {
     }
 
     private void listFiles() {
+        progressBar.setVisibility(View.VISIBLE);
         File directory = getContext().getFilesDir();
         File[] files = directory.listFiles();
 
@@ -75,6 +81,7 @@ public class FileManagementFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "No files found", Toast.LENGTH_SHORT).show();
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     private void uploadFile() {
@@ -134,6 +141,11 @@ public class FileManagementFragment extends Fragment {
 
     private class SCPUploadTask extends AsyncTask<String, Void, Boolean> {
         @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected Boolean doInBackground(String... params) {
             String localFilePath = params[0];
             String remoteFilePath = params[1];
@@ -142,6 +154,7 @@ public class FileManagementFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            progressBar.setVisibility(View.GONE);
             if (result) {
                 Toast.makeText(getContext(), "File uploaded successfully", Toast.LENGTH_SHORT).show();
             } else {
@@ -152,6 +165,11 @@ public class FileManagementFragment extends Fragment {
 
     private class SCPDownloadTask extends AsyncTask<String, Void, Boolean> {
         @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected Boolean doInBackground(String... params) {
             String remoteFilePath = params[0];
             String localFilePath = params[1];
@@ -160,6 +178,7 @@ public class FileManagementFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
+            progressBar.setVisibility(View.GONE);
             if (result) {
                 Toast.makeText(getContext(), "File downloaded successfully", Toast.LENGTH_SHORT).show();
             } else {
