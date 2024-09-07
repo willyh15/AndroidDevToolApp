@@ -7,7 +7,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import java.security.KeyStore;
-import java.security.SecureRandom;
 
 public class KeystoreManager {
 
@@ -36,6 +35,7 @@ public class KeystoreManager {
         }
     }
 
+    // Encrypt data using AES/GCM
     public String encryptData(String data) {
         try {
             SecretKey key = ((KeyStore.SecretKeyEntry) keyStore.getEntry(KEY_ALIAS, null)).getSecretKey();
@@ -55,6 +55,7 @@ public class KeystoreManager {
         }
     }
 
+    // Decrypt data using AES/GCM
     public String decryptData(String encryptedData) {
         try {
             SecretKey key = ((KeyStore.SecretKeyEntry) keyStore.getEntry(KEY_ALIAS, null)).getSecretKey();
