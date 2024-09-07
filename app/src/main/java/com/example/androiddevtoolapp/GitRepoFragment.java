@@ -1,46 +1,4 @@
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-import androidx.fragment.app.Fragment;
 
-public class GitRepoFragment extends Fragment {
-
-    private EditText editTextRepoPath, editTextCommitMessage, editTextBranchName;
-    private Button buttonInitRepo, buttonCommit, buttonCreateBranch, buttonCheckoutBranch, buttonMergeBranch;
-    private GitManager gitManager;
-
-    public GitRepoFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_git_repo, container, false);
-
-        // Initialize UI components
-        editTextRepoPath = view.findViewById(R.id.editTextRepoPath);
-        editTextCommitMessage = view.findViewById(R.id.editTextCommitMessage);
-        editTextBranchName = view.findViewById(R.id.editTextBranchName);
-        buttonInitRepo = view.findViewById(R.id.buttonInitRepo);
-        buttonCommit = view.findViewById(R.id.buttonCommit);
-        buttonCreateBranch = view.findViewById(R.id.buttonCreateBranch);
-        buttonCheckoutBranch = view.findViewById(R.id.buttonCheckoutBranch);
-        buttonMergeBranch = view.findViewById(R.id.buttonMergeBranch);
-
-        gitManager = new GitManager();
-
-        buttonInitRepo.setOnClickListener(v -> {
-            String repoPath = editTextRepoPath.getText().toString();
-            if (repoPath.isEmpty()) {
-                Toast.makeText(getContext(), "It seems like my response was cut off earlier. Let me continue providing the full updated version of each file you requested:
-
-### Full Updated Version of `GitRepoFragment.java`
-```java
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
