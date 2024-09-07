@@ -47,7 +47,7 @@ public class GitHubActionsFragment extends Fragment {
                 .addInterceptor(chain -> {
                     // Add the OAuth token to the request
                     return chain.proceed(chain.request().newBuilder()
-                            .header("Authorization", "Bearer YOUR_GITHUB_TOKEN")
+                            .header("Authorization", "Bearer " + getGitHubToken())
                             .build());
                 })
                 .build();
@@ -121,5 +121,10 @@ public class GitHubActionsFragment extends Fragment {
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String getGitHubToken() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("GitHubPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("GitHubToken", null);
     }
 }
