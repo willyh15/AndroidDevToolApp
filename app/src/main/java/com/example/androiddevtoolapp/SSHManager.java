@@ -3,6 +3,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 public class SSHManager {
@@ -22,24 +23,23 @@ public class SSHManager {
     }
 
     public boolean connectWithPassword(String host, String username, String password) {
-        try {
-            JSch jsch = new JSch();
-            session = jsch.getSession(username, host, 22);
-            session.setPassword(password);
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.connect();
-            return true;
-        } catch (JSchException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return connect(host, username, password, null);
     }
 
     public boolean connectWithKey(String host, String username, String privateKeyPath) {
+        return connect(host, username, null, privateKeyPath);
+    }
+
+    private boolean connect(String host, String username, String password, String privateKeyPath) {
         try {
             JSch jsch = new JSch();
-            jsch.addIdentity(privateKeyPath);
+            if (privateKeyPath != null) {
+                jsch.addIdentity(privateKeyPath);
+            }
             session = jsch.getSession(username, host, 22);
+            if (password != null) {
+                session.setPassword(password);
+            }
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
             return true;
@@ -47,10 +47,6 @@ public class SSHManager {
             e.printStackTrace();
             return false;
         }
-    }
-
-    public Session getSession() {
-        return session;
     }
 
     public void disconnect() {
@@ -60,50 +56,41 @@ public class SSHManager {
     }
 
     public boolean uploadFile(String localFilePath, String remoteFilePath) {
-        try {
-            ChannelExec channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand("scp -t " + remoteFilePath);
-            OutputStream out = channel.getOutputStream();
-            channel.connect();
-
-            FileInputStream fis = new FileInputStream(localFilePath);
-            byte[] buffer = new byte[1024];
-            int len;
-
-            while ((len = fis.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
-
-            fis.close();
-            out.close();
-            channel.disconnect();
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return performSCP(localFilePath, remoteFilePath, "upload");
     }
 
     public boolean downloadFile(String remoteFilePath, String localFilePath) {
+        return performSCP(localFilePath, remoteFilePath, "download");
+    }
+
+    private boolean performSCP(String source, String destination, String operation) {
         try {
             ChannelExec channel = (ChannelExec) session.openChannel("exec");
-            channel.setCommand("scp -f " + remoteFilePath);
+            String command = operation.equals("upload") ? "scp -t " + destination : "scp -f " + source;
+            channel.setCommand(command);
             OutputStream out = channel.getOutputStream();
-            FileOutputStream fos = new FileOutputStream(localFilePath);
-            byte[] buffer = new byte[1024];
-            int len;
-
             channel.connect();
 
-            while ((len = channel.getInputStream().read(buffer)) != -1) {
-                fos.write(buffer, 0, len);
+            if (operation.equals("upload")) {
+                FileInputStream fis = new FileInputStream(source);
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = fis.read(buffer)) != -1) {
+                    out.write(buffer, 0, len);
+                }
+                fis.close();
+            } else {
+                FileOutputStream fos = new FileOutputStream(destination);
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = channel.getInputStream().read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
             }
 
-            fos.close();
             out.close();
             channel.disconnect();
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
