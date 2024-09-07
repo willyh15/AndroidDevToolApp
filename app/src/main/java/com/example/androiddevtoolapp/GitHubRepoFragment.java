@@ -23,10 +23,10 @@ public class GitHubRepoFragment extends Fragment {
 
     private EditText editTextRepoPath, editTextFilePath;
     private Button buttonUploadToGitHub;
-    private ProgressBar progressBar;  // New ProgressBar to show progress
     private GitHubService gitHubService;
     private KeystoreManager keystoreManager;
     private SharedPreferences sharedPreferences;
+    private ProgressBar progressBar;
 
     private static final String PREFS_NAME = "GitHubPrefs";
     private static final String GITHUB_TOKEN_KEY = "GitHubToken";
@@ -44,8 +44,8 @@ public class GitHubRepoFragment extends Fragment {
         editTextRepoPath = view.findViewById(R.id.editTextRepoPath);
         editTextFilePath = view.findViewById(R.id.editTextFilePath);
         buttonUploadToGitHub = view.findViewById(R.id.buttonUploadToGitHub);
-        progressBar = view.findViewById(R.id.progressBar);  // Progress bar to indicate progress
-        progressBar.setVisibility(View.GONE);  // Initially hidden
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE); // Hide progress bar initially
 
         // Initialize KeystoreManager and SharedPreferences
         keystoreManager = new KeystoreManager(getContext());
@@ -54,12 +54,10 @@ public class GitHubRepoFragment extends Fragment {
         buttonUploadToGitHub.setOnClickListener(v -> {
             String repoPath = editTextRepoPath.getText().toString();
             String filePath = editTextFilePath.getText().toString();
-
-            // Null and empty checks
-            if (repoPath == null || repoPath.isEmpty() || filePath == null || filePath.isEmpty()) {
+            if (repoPath.isEmpty() || filePath.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter both repository path and file path", Toast.LENGTH_SHORT).show();
             } else {
-                // Upload in the background
+                progressBar.setVisibility(View.VISIBLE);  // Show progress bar during upload
                 new UploadFileTask().execute(repoPath, filePath);
             }
         });
@@ -67,43 +65,19 @@ public class GitHubRepoFragment extends Fragment {
         return view;
     }
 
-    // Method to store the encrypted GitHub token
-    private void storeGitHubToken(String token) {
-        String encryptedToken = keystoreManager.encryptData(token);
-        sharedPreferences.edit().putString(GITHUB_TOKEN_KEY, encryptedToken).apply();
-    }
-
-    // Method to retrieve and decrypt the GitHub token
-    private String getGitHubToken() {
-        String encryptedToken = sharedPreferences.getString(GITHUB_TOKEN_KEY, null);
-        if (encryptedToken != null) {
-            return keystoreManager.decryptData(encryptedToken);
-        } else {
-            Toast.makeText(getContext(), "GitHub token not found", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-    }
-
-    // AsyncTask to handle the file upload in the background
+    // AsyncTask for uploading the file to GitHub
     private class UploadFileTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);  // Show progress bar before upload
-        }
-
-        @Override
         protected Boolean doInBackground(String... params) {
-            String owner = "your-username";  // Replace with your GitHub username
-            String repo = "your-repo";  // Replace with your GitHub repo name
             String repoPath = params[0];
             String filePath = params[1];
-            return uploadFileToGitHub(owner, repo, repoPath, filePath);
+            return uploadFileToGitHub("your-username", "your-repo", repoPath, filePath);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            progressBar.setVisibility(View.GONE);  // Hide progress bar after upload
+            progressBar.setVisibility(View.GONE); // Hide progress bar after task completion
             if (result) {
                 Toast.makeText(getContext(), "File uploaded to GitHub successfully", Toast.LENGTH_SHORT).show();
             } else {
@@ -112,7 +86,7 @@ public class GitHubRepoFragment extends Fragment {
         }
     }
 
-    private boolean uploadFileToGitHub(String owner, String repo, String path, String filePath) {
+    private Boolean uploadFileToGitHub(String owner, String repo, String path, String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             return false;
@@ -130,27 +104,40 @@ public class GitHubRepoFragment extends Fragment {
             String body = "{ \"message\": \"Upload file via app\", \"content\": \"" + fileContentBase64 + "\" }";
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), body);
 
-            // Use the token in your GitHub API request headers
             gitHubService.uploadFile(owner, repo, path, requestBody).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(getContext(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "Failed to upload file: " + response.message(), Toast.LENGTH_SHORT).show();
-                    }
+                    // Handle response in onPostExecute
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Handle failure in onPostExecute
                 }
             });
 
             return true;
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    // Method to store the encrypted GitHub token
+    private void storeGitHubToken(String token) {
+        String encryptedToken = keystoreManager.encryptData(token);
+        sharedPreferences.edit().putString(GITHUB_TOKEN_KEY, encryptedToken).apply();
+    }
+
+    // Method to retrieve and decrypt the GitHub token
+    private String getGitHubToken() {
+        String encryptedToken = sharedPreferences.getString(GITHUB_TOKEN_KEY, null);
+        if (encryptedToken != null) {
+            return keystoreManager.decryptData(encryptedToken);
+        } else {
+            Toast.makeText(getContext(), "GitHub token not found", Toast.LENGTH_SHORT).show();
+            return null;
         }
     }
 }
