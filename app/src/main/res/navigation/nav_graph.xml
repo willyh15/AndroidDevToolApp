@@ -4,17 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/SSHFragment">
 
-It seems like my response was cut off earlier. I’ll continue providing the full updated version of the `nav_graph.xml` file as requested.
-
-### Full Updated Version of `nav_graph.xml`
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/SSHFragment">
-
     <fragment
         android:id="@+id/SSHFragment"
         android:name="com.example.androiddevtoolapp.SSHFragment"
