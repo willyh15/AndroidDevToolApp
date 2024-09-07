@@ -19,7 +19,7 @@ public class ScheduleTaskFragment extends Fragment {
     private Spinner spinnerTaskType;
     private EditText editTextTaskDetails, editTextDelay;
     private Button buttonScheduleTask;
-    private ProgressBar progressBar;  // Added ProgressBar for loading indication
+    private ProgressBar progressBar;
 
     public ScheduleTaskFragment() {
         // Required empty public constructor
@@ -35,8 +35,8 @@ public class ScheduleTaskFragment extends Fragment {
         editTextTaskDetails = view.findViewById(R.id.editTextTaskDetails);
         editTextDelay = view.findViewById(R.id.editTextDelay);
         buttonScheduleTask = view.findViewById(R.id.buttonScheduleTask);
-        progressBar = view.findViewById(R.id.progressBar);  // Initialize ProgressBar
-        progressBar.setVisibility(View.GONE);  // Initially hide ProgressBar
+        progressBar = view.findViewById(R.id.progressBar);  // ProgressBar for loading feedback
+        progressBar.setVisibility(View.GONE);  // Initially hidden
 
         // Set up the spinner with task types
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -44,7 +44,6 @@ public class ScheduleTaskFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTaskType.setAdapter(adapter);
 
-        // Handle button click to schedule a task
         buttonScheduleTask.setOnClickListener(v -> {
             String taskType = spinnerTaskType.getSelectedItem().toString();
             String taskDetails = editTextTaskDetails.getText().toString();
@@ -56,7 +55,7 @@ public class ScheduleTaskFragment extends Fragment {
             }
 
             long delay = Long.parseLong(delayStr);
-            progressBar.setVisibility(View.VISIBLE);  // Show ProgressBar during task scheduling
+            progressBar.setVisibility(View.VISIBLE);  // Show ProgressBar while scheduling
             scheduleTask(taskType, taskDetails, delay);
         });
 
@@ -74,11 +73,19 @@ public class ScheduleTaskFragment extends Fragment {
                 .setInputData(inputData)
                 .build();
 
-        // Enqueue the task asynchronously
-        WorkManager.getInstance(getContext()).enqueue(workRequest).getResult().addListener(() -> {
-            // Hide ProgressBar after task is scheduled
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "Task scheduled successfully", Toast.LENGTH_SHORT).show();
-        }, getActivity().getMainExecutor());
+        WorkManager workManager = WorkManager.getInstance(getContext());
+        workManager.enqueue(workRequest);
+
+        // Observe the task's progress
+        workManager.getWorkInfoByIdLiveData(workRequest.getId()).observe(getViewLifecycleOwner(), workInfo -> {
+            if (workInfo != null) {
+                if (workInfo.getState().isFinished()) {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Task completed!", Toast.LENGTH_SHORT).show();
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 }
