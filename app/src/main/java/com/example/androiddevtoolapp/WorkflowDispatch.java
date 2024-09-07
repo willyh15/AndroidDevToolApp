@@ -10,4 +10,11 @@ public class WorkflowDispatch {
     }
 
     // Getter and setter
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
 }
