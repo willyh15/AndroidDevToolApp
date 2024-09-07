@@ -1,3 +1,4 @@
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -5,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class GitHubActionsFragment extends Fragment {
 
     private Button buttonListWorkflows, buttonTriggerWorkflow;
     private ListView listViewWorkflows;
+    private ProgressBar progressBar;  // Added ProgressBar for loading indication
     private GitHubService gitHubService;
     private List<Workflow> workflowList = new ArrayList<>();
     private String selectedWorkflowId = "";
@@ -38,6 +41,8 @@ public class GitHubActionsFragment extends Fragment {
         buttonListWorkflows = view.findViewById(R.id.buttonListWorkflows);
         buttonTriggerWorkflow = view.findViewById(R.id.buttonTriggerWorkflow);
         listViewWorkflows = view.findViewById(R.id.listViewWorkflows);
+        progressBar = view.findViewById(R.id.progressBar);  // Initialize ProgressBar
+        progressBar.setVisibility(View.GONE);  // Initially hide ProgressBar
 
         // Set up Retrofit for GitHub API
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -47,7 +52,7 @@ public class GitHubActionsFragment extends Fragment {
                 .addInterceptor(chain -> {
                     // Add the OAuth token to the request
                     return chain.proceed(chain.request().newBuilder()
-                            .header("Authorization", "Bearer " + getGitHubToken())
+                            .header("Authorization", "Bearer YOUR_GITHUB_TOKEN")
                             .build());
                 })
                 .build();
@@ -60,10 +65,12 @@ public class GitHubActionsFragment extends Fragment {
 
         gitHubService = retrofit.create(GitHubService.class);
 
+        // List workflows on button click
         buttonListWorkflows.setOnClickListener(v -> {
             listWorkflows("your-github-username", "your-repo-name");
         });
 
+        // Trigger workflow on button click
         buttonTriggerWorkflow.setOnClickListener(v -> {
             if (!selectedWorkflowId.isEmpty()) {
                 triggerWorkflow("your-github-username", "your-repo-name", selectedWorkflowId);
@@ -81,9 +88,13 @@ public class GitHubActionsFragment extends Fragment {
     }
 
     private void listWorkflows(String owner, String repo) {
+        progressBar.setVisibility(View.VISIBLE);  // Show ProgressBar while loading
+
         gitHubService.listWorkflows(owner, repo).enqueue(new Callback<WorkflowsResponse>() {
             @Override
             public void onResponse(Call<WorkflowsResponse> call, Response<WorkflowsResponse> response) {
+                progressBar.setVisibility(View.GONE);  // Hide ProgressBar after response
+
                 if (response.isSuccessful() && response.body() != null) {
                     workflowList = response.body().getWorkflows();
                     List<String> workflowNames = new ArrayList<>();
@@ -99,16 +110,21 @@ public class GitHubActionsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<WorkflowsResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);  // Hide ProgressBar after failure
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void triggerWorkflow(String owner, String repo, String workflowId) {
+        progressBar.setVisibility(View.VISIBLE);  // Show ProgressBar during the API call
+
         WorkflowDispatch dispatch = new WorkflowDispatch("main"); // or other branch
         gitHubService.triggerWorkflow(owner, repo, workflowId, dispatch).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                progressBar.setVisibility(View.GONE);  // Hide ProgressBar after response
+
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Workflow triggered successfully!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -118,13 +134,9 @@ public class GitHubActionsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);  // Hide ProgressBar after failure
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private String getGitHubToken() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("GitHubPrefs", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("GitHubToken", null);
     }
 }
