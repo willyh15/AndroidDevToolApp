@@ -1,4 +1,21 @@
 <resources>
+    <string name="app_name">Android Dev Tool App</string>
+    <string name="execute_command">Execute Command</string>
+    <string name="enter_command">Enter command</string>
+    <string name="list_files">List Files</string>
+    <string name="upload_file">Upload File</string>
+    <string name="download_file">Download File</string>
+    <string name="file_content">File Content</string>
+    <string name="edit_file">Edit File</string>
+    <string name="save_file">Save File</string>
+    <string name="repo_path">Repository Path</string>
+    <string name="commit_changes">Commit Changes</string>
+    <string name="branch_name">Branch Name</string>
+    <string name="create_branch">Create Branch</string>
+    <string name="checkout_branch">Checkout Branch</string>
+    <string name="merge_branch">Merge Branch</string>
+    <string name="schedule_task">Schedule Task</string>
+
     <!-- Other strings -->
     <string-array name="task_types">
         <item>SSH_SCRIPT</item>
