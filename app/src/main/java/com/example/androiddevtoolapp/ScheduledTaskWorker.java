@@ -1,7 +1,9 @@
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import com.jcraft.jsch.ChannelExec;
 
 public class ScheduledTaskWorker extends Worker {
 
@@ -37,7 +39,7 @@ public class ScheduledTaskWorker extends Worker {
     private Result executeSSHScript(String scriptName) {
         SSHManager sshManager = SSHManager.getInstance();
         if (sshManager.getSession() == null || !sshManager.getSession().isConnected()) {
-            return Result.failure();
+            return Result.failure(new Data.Builder().putString("error", "SSH session not connected").build());
         }
 
         // Execute the script
@@ -50,22 +52,20 @@ public class ScheduledTaskWorker extends Worker {
             return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
-            return Result.failure();
+            return Result.failure(new Data.Builder().putString("error", e.getMessage()).build());
         }
     }
 
     private Result syncFiles(String details) {
-        // Parse details to get local and remote paths
         String[] paths = details.split(",");
         if (paths.length != 2) {
-            return Result.failure();
+            return Result.failure(new Data.Builder().putString("error", "Invalid file paths").build());
         }
 
         String localPath = paths[0];
         String remotePath = paths[1];
         SSHManager sshManager = SSHManager.getInstance();
 
-        // Perform file sync
         boolean uploadResult = sshManager.uploadFile(localPath, remotePath);
         boolean downloadResult = sshManager.downloadFile(remotePath, localPath);
         return uploadResult && downloadResult ? Result.success() : Result.failure();
@@ -73,14 +73,13 @@ public class ScheduledTaskWorker extends Worker {
 
     private Result performGitOperation(String operation) {
         GitManager gitManager = new GitManager();
-        gitManager.initializeRepository("/path/to/local/repo");  // Modify with actual path
+        gitManager.initializeRepository("/path/to/local/repo");
 
         switch (operation) {
             case "COMMIT":
                 return gitManager.commitChanges("Scheduled commit") ? Result.success() : Result.failure();
             case "PUSH":
-                // Implement push logic if needed
-                return Result.failure(); // Placeholder
+                return Result.failure(new Data.Builder().putString("error", "Push not implemented").build());
             default:
                 return Result.failure();
         }
