@@ -1,9 +1,11 @@
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
@@ -11,6 +13,7 @@ public class GitRepoFragment extends Fragment {
 
     private EditText editTextRepoPath, editTextCommitMessage, editTextBranchName;
     private Button buttonInitRepo, buttonCommit, buttonCreateBranch, buttonCheckoutBranch, buttonMergeBranch;
+    private ProgressBar progressBar;  // Progress bar for loading indicator
     private GitManager gitManager;
 
     public GitRepoFragment() {
@@ -31,71 +34,53 @@ public class GitRepoFragment extends Fragment {
         buttonCreateBranch = view.findViewById(R.id.buttonCreateBranch);
         buttonCheckoutBranch = view.findViewById(R.id.buttonCheckoutBranch);
         buttonMergeBranch = view.findViewById(R.id.buttonMergeBranch);
+        progressBar = view.findViewById(R.id.progressBar);  // Reference to the ProgressBar
 
         gitManager = new GitManager();
+        progressBar.setVisibility(View.GONE);  // Hide progress bar initially
 
         buttonInitRepo.setOnClickListener(v -> {
             String repoPath = editTextRepoPath.getText().toString();
-            if (repoPath.isEmpty()) {
+            if (repoPath == null || repoPath.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a repository path", Toast.LENGTH_SHORT).show();
             } else {
-                if (gitManager.initializeRepository(repoPath)) {
-                    Toast.makeText(getContext(), "Repository initialized successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Failed to initialize repository", Toast.LENGTH_SHORT).show();
-                }
+                new GitTask("init", repoPath, null).execute();
             }
         });
 
         buttonCommit.setOnClickListener(v -> {
             String message = editTextCommitMessage.getText().toString();
-            if (message.isEmpty()) {
+            if (message == null || message.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a commit message", Toast.LENGTH_SHORT).show();
             } else {
-                if (gitManager.commitChanges(message)) {
-                    Toast.makeText(getContext(), "Changes committed successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Failed to commit changes", Toast.LENGTH_SHORT).show();
-                }
+                new GitTask("commit", null, message).execute();
             }
         });
 
         buttonCreateBranch.setOnClickListener(v -> {
             String branchName = editTextBranchName.getText().toString();
-            if (branchName.isEmpty()) {
+            if (branchName == null || branchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a branch name", Toast.LENGTH_SHORT).show();
             } else {
-                if (gitManager.createBranch(branchName)) {
-                    Toast.makeText(getContext(), "Branch created successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Failed to create branch", Toast.LENGTH_SHORT).show();
-                }
+                new GitTask("createBranch", branchName, null).execute();
             }
         });
 
         buttonCheckoutBranch.setOnClickListener(v -> {
             String branchName = editTextBranchName.getText().toString();
-            if (branchName.isEmpty()) {
+            if (branchName == null || branchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a branch name", Toast.LENGTH_SHORT).show();
             } else {
-                if (gitManager.checkoutBranch(branchName)) {
-                    Toast.makeText(getContext(), "Switched to branch: " + branchName, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Failed to switch branch", Toast.LENGTH_SHORT).show();
-                }
+                new GitTask("checkoutBranch", branchName, null).execute();
             }
         });
 
         buttonMergeBranch.setOnClickListener(v -> {
             String branchName = editTextBranchName.getText().toString();
-            if (branchName.isEmpty()) {
+            if (branchName == null || branchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a branch name", Toast.LENGTH_SHORT).show();
             } else {
-                if (gitManager.mergeBranch(branchName)) {
-                    Toast.makeText(getContext(), "Branch merged successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Failed to merge branch", Toast.LENGTH_SHORT).show();
-                }
+                new GitTask("mergeBranch", branchName, null).execute();
             }
         });
 
@@ -106,5 +91,51 @@ public class GitRepoFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         gitManager.close();
+    }
+
+    // AsyncTask to handle Git operations in the background
+    private class GitTask extends AsyncTask<Void, Void, Boolean> {
+        private String operation;
+        private String pathOrBranch;
+        private String commitMessage;
+
+        public GitTask(String operation, String pathOrBranch, String commitMessage) {
+            this.operation = operation;
+            this.pathOrBranch = pathOrBranch;
+            this.commitMessage = commitMessage;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);  // Show progress bar before starting task
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            switch (operation) {
+                case "init":
+                    return gitManager.initializeRepository(pathOrBranch);
+                case "commit":
+                    return gitManager.commitChanges(commitMessage);
+                case "createBranch":
+                    return gitManager.createBranch(pathOrBranch);
+                case "checkoutBranch":
+                    return gitManager.checkoutBranch(pathOrBranch);
+                case "mergeBranch":
+                    return gitManager.mergeBranch(pathOrBranch);
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            progressBar.setVisibility(View.GONE);  // Hide progress bar when task is done
+            if (result) {
+                Toast.makeText(getContext(), operation + " operation completed successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Failed to " + operation, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
