@@ -1,7 +1,8 @@
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,12 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GitHubRepoFragment extends Fragment {
 
@@ -30,6 +34,7 @@ public class GitHubRepoFragment extends Fragment {
 
     private static final String PREFS_NAME = "GitHubPrefs";
     private static final String GITHUB_TOKEN_KEY = "GitHubToken";
+    private ExecutorService executorService;
 
     public GitHubRepoFragment() {
         // Required empty public constructor
@@ -50,6 +55,7 @@ public class GitHubRepoFragment extends Fragment {
         // Initialize KeystoreManager and SharedPreferences
         keystoreManager = new KeystoreManager(getContext());
         sharedPreferences = getContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        executorService = Executors.newSingleThreadExecutor();
 
         buttonUploadToGitHub.setOnClickListener(v -> {
             String repoPath = editTextRepoPath.getText().toString();
@@ -58,32 +64,26 @@ public class GitHubRepoFragment extends Fragment {
                 Toast.makeText(getContext(), "Please enter both repository path and file path", Toast.LENGTH_SHORT).show();
             } else {
                 progressBar.setVisibility(View.VISIBLE);  // Show progress bar during upload
-                new UploadFileTask().execute(repoPath, filePath);
+                executeUploadFileTask(repoPath, filePath);
             }
         });
 
         return view;
     }
 
-    // AsyncTask for uploading the file to GitHub
-    private class UploadFileTask extends AsyncTask<String, Void, Boolean> {
+    private void executeUploadFileTask(String repoPath, String filePath) {
+        executorService.execute(() -> {
+            boolean result = uploadFileToGitHub("your-username", "your-repo", repoPath, filePath);
 
-        @Override
-        protected Boolean doInBackground(String... params) {
-            String repoPath = params[0];
-            String filePath = params[1];
-            return uploadFileToGitHub("your-username", "your-repo", repoPath, filePath);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            progressBar.setVisibility(View.GONE); // Hide progress bar after task completion
-            if (result) {
-                Toast.makeText(getContext(), "File uploaded to GitHub successfully", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "Failed to upload file to GitHub", Toast.LENGTH_SHORT).show();
-            }
-        }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                progressBar.setVisibility(View.GONE); // Hide progress bar after task completion
+                if (result) {
+                    Toast.makeText(getContext(), "File uploaded to GitHub successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Failed to upload file to GitHub", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     private Boolean uploadFileToGitHub(String owner, String repo, String path, String filePath) {
@@ -102,7 +102,7 @@ public class GitHubRepoFragment extends Fragment {
             String fileContentBase64 = android.util.Base64.encodeToString(fileContent, android.util.Base64.NO_WRAP);
 
             String body = "{ \"message\": \"Upload file via app\", \"content\": \"" + fileContentBase64 + "\" }";
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), body);
+            RequestBody requestBody = RequestBody.create(body, MediaType.parse("application/json"));
 
             gitHubService.uploadFile(owner, repo, path, requestBody).enqueue(new Callback<Void>() {
                 @Override
