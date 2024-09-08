@@ -49,18 +49,18 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
-    // Additional dependencies
-    implementation 'com.jcraft:jsch:0.1.55'  // For SSH functionality
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'  // For GitHub API
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'  // For JSON parsing
-    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'  // For Git integration
-    implementation 'androidx.work:work-runtime:2.7.1'  // For WorkManager tasks
+    implementation 'com.jcraft:jsch:0.1.55'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'
+    implementation 'androidx.work:work-runtime:2.7.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
-    // OkHttp Logging Interceptor (Fix for the error)
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'  // OkHttp Logging Interceptor
+    // Ensure Kotlin standard libraries use the same version
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
 
     // Unit Testing dependencies
     testImplementation 'junit:junit:4.13.2'
@@ -71,3 +71,9 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 }
 
+// Exclude old versions to prevent conflict
+configurations {
+    all {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    }
+}
