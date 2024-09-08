@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.example.androiddevtoolapp'
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.example.androiddevtoolapp"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
@@ -63,7 +63,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.7.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.0'
 
-
     // Unit Testing dependencies
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -71,4 +70,34 @@ dependencies {
 
     // MultiDex support
     implementation 'androidx.multidex:multidex:2.0.1'
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.0'  // Update to a version that supports SDK 34
+    }
+}
+
+allprojects {
+    repositories {
+        google()  // Google's Maven repository
+        mavenCentral()  // Maven Central repository
+    }
+
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}
+
+gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
+gradle.startParameter.warningMode = WarningMode.All
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
