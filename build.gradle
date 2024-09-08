@@ -1,22 +1,24 @@
-// Root-level build.gradle file
-
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'  // Latest gradle version
-        // Add other classpaths here if needed (e.g., Kotlin or navigation-safe-args)
+        classpath 'com.android.tools.build:gradle:8.0.2'  // Latest Gradle plugin
+        // Add other classpaths if needed (e.g., Kotlin)
     }
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
     }
 }
+
+gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
+gradle.startParameter.warningMode = WarningMode.All  // Show all warnings
 
 task clean(type: Delete) {
     delete rootProject.buildDir
