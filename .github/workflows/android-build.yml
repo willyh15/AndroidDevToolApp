@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -36,21 +35,21 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    # Give executable permission to gradlew
+    # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
 
     # Build the Android project with detailed logs
     - name: Build with Gradle (with stacktrace and info)
-      run: ./gradlew build --stacktrace --info
+      run: ./gradlew build --stacktrace --info --console=plain --warning-mode=summary
 
     # Run unit tests
     - name: Run Unit Tests
-      run: ./gradlew test --stacktrace --info
+      run: ./gradlew test --stacktrace --info --console=plain --warning-mode=summary
 
     # Assemble the app
     - name: Assemble Release APK
-      run: ./gradlew assembleRelease --stacktrace --info
+      run: ./gradlew assembleRelease --stacktrace --info --console=plain --warning-mode=summary
 
     # Archive the built APK
     - name: Upload APK
