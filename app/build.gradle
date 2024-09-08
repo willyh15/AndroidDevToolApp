@@ -19,6 +19,7 @@ android {
         release {
             minifyEnabled true  // Enable code shrinking for release builds
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationIdSuffix "" // Ensure no suffix for release builds
         }
         debug {
             debuggable true
