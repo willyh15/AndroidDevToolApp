@@ -1,5 +1,6 @@
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class GitRepoFragment extends Fragment {
 
     private EditText editTextRepoPath, editTextCommitMessage, editTextBranchName;
     private Button buttonInitRepo, buttonCommit, buttonCreateBranch, buttonCheckoutBranch, buttonMergeBranch;
     private ProgressBar progressBar;  // Progress bar for loading indicator
     private GitManager gitManager;
+    private ExecutorService executorService;
 
     public GitRepoFragment() {
         // Required empty public constructor
@@ -37,6 +42,7 @@ public class GitRepoFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);  // Reference to the ProgressBar
 
         gitManager = new GitManager();
+        executorService = Executors.newSingleThreadExecutor();
         progressBar.setVisibility(View.GONE);  // Hide progress bar initially
 
         buttonInitRepo.setOnClickListener(v -> {
@@ -44,7 +50,7 @@ public class GitRepoFragment extends Fragment {
             if (repoPath == null || repoPath.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a repository path", Toast.LENGTH_SHORT).show();
             } else {
-                new GitTask("init", repoPath, null).execute();
+                executeGitTask("init", repoPath, null);
             }
         });
 
@@ -53,7 +59,7 @@ public class GitRepoFragment extends Fragment {
             if (message == null || message.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a commit message", Toast.LENGTH_SHORT).show();
             } else {
-                new GitTask("commit", null, message).execute();
+                executeGitTask("commit", null, message);
             }
         });
 
@@ -62,7 +68,7 @@ public class GitRepoFragment extends Fragment {
             if (branchName == null || branchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a branch name", Toast.LENGTH_SHORT).show();
             } else {
-                new GitTask("createBranch", branchName, null).execute();
+                executeGitTask("createBranch", branchName, null);
             }
         });
 
@@ -71,7 +77,7 @@ public class GitRepoFragment extends Fragment {
             if (branchName == null || branchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a branch name", Toast.LENGTH_SHORT).show();
             } else {
-                new GitTask("checkoutBranch", branchName, null).execute();
+                executeGitTask("checkoutBranch", branchName, null);
             }
         });
 
@@ -80,62 +86,51 @@ public class GitRepoFragment extends Fragment {
             if (branchName == null || branchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a branch name", Toast.LENGTH_SHORT).show();
             } else {
-                new GitTask("mergeBranch", branchName, null).execute();
+                executeGitTask("mergeBranch", branchName, null);
             }
         });
 
         return view;
     }
 
+    private void executeGitTask(String operation, String pathOrBranch, String commitMessage) {
+        progressBar.setVisibility(View.VISIBLE);
+        executorService.execute(() -> {
+            boolean result = false;
+            switch (operation) {
+                case "init":
+                    result = gitManager.initializeRepository(pathOrBranch);
+                    break;
+                case "commit":
+                    result = gitManager.commitChanges(commitMessage);
+                    break;
+                case "createBranch":
+                    result = gitManager.createBranch(pathOrBranch);
+                    break;
+                case "checkoutBranch":
+                    result = gitManager.checkoutBranch(pathOrBranch);
+                    break;
+                case "mergeBranch":
+                    result = gitManager.mergeBranch(pathOrBranch);
+                    break;
+            }
+
+            boolean finalResult = result;
+            new Handler(Looper.getMainLooper()).post(() -> {
+                progressBar.setVisibility(View.GONE);
+                if (finalResult) {
+                    Toast.makeText(getContext(), operation + " operation completed successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Failed to " + operation, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         gitManager.close();
-    }
-
-    // AsyncTask to handle Git operations in the background
-    private class GitTask extends AsyncTask<Void, Void, Boolean> {
-        private String operation;
-        private String pathOrBranch;
-        private String commitMessage;
-
-        public GitTask(String operation, String pathOrBranch, String commitMessage) {
-            this.operation = operation;
-            this.pathOrBranch = pathOrBranch;
-            this.commitMessage = commitMessage;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);  // Show progress bar before starting task
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            switch (operation) {
-                case "init":
-                    return gitManager.initializeRepository(pathOrBranch);
-                case "commit":
-                    return gitManager.commitChanges(commitMessage);
-                case "createBranch":
-                    return gitManager.createBranch(pathOrBranch);
-                case "checkoutBranch":
-                    return gitManager.checkoutBranch(pathOrBranch);
-                case "mergeBranch":
-                    return gitManager.mergeBranch(pathOrBranch);
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            progressBar.setVisibility(View.GONE);  // Hide progress bar when task is done
-            if (result) {
-                Toast.makeText(getContext(), operation + " operation completed successfully", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "Failed to " + operation, Toast.LENGTH_SHORT).show();
-            }
-        }
+        executorService.shutdown();
     }
 }
