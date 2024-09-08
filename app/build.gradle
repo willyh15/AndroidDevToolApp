@@ -2,27 +2,49 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.example.androiddevtoolapp'
-    compileSdkVersion 33  // Adjust to the latest version
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.example.androiddevtoolapp"
-        minSdkVersion 21  // Minimum SDK for Android 5.0 (Lollipop)
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true  // Enable Multi-Dex support for large projects
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true  // Enable code shrinking for release builds
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-DEBUG"
+            minifyEnabled false  // Disable code shrinking in debug builds
+        }
+    }
+
+    lintOptions {
+        abortOnError false  // Don’t abort build on lint errors
+        warningsAsErrors true  // Treat all warnings as errors
     }
 
     buildFeatures {
         viewBinding true  // Enable View Binding
+        dataBinding true  // Enable Data Binding
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"  // Increase heap size for large projects
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
@@ -38,7 +60,11 @@ dependencies {
     implementation 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'  // For Git integration
     implementation 'androidx.work:work-runtime:2.7.1'  // For WorkManager tasks
 
+    // Unit Testing dependencies
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // MultiDex support
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
