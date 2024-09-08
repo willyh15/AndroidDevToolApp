@@ -39,10 +39,6 @@ android {
         dataBinding true  // Enable Data Binding
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"  // Increase heap size for large projects
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -97,7 +93,3 @@ allprojects {
 
 gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
 gradle.startParameter.warningMode = WarningMode.All
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
