@@ -60,6 +60,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'  // For JSON parsing
     implementation 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'  // For Git integration
     implementation 'androidx.work:work-runtime:2.7.1'  // For WorkManager tasks
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.0'
+
 
     // Unit Testing dependencies
     testImplementation 'junit:junit:4.13.2'
