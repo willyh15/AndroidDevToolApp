@@ -4,14 +4,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.1.0'  // Update to a version that supports SDK 34
     }
 }
 
 allprojects {
     repositories {
-        google()
-        mavenCentral()
+        google()  // Google's Maven repository
+        mavenCentral()  // Maven Central repository
     }
 
     gradle.projectsEvaluated {
@@ -23,7 +23,3 @@ allprojects {
 
 gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
 gradle.startParameter.warningMode = WarningMode.All
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
