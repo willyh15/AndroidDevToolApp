@@ -9,11 +9,13 @@
     <string name="edit_file">Edit File</string>
     <string name="save_file">Save File</string>
     <string name="repo_path">Repository Path</string>
+    <string name="commit_message">Commit Message</string> <!-- Add this for clarity -->
     <string name="commit_changes">Commit Changes</string>
     <string name="branch_name">Branch Name</string>
     <string name="create_branch">Create Branch</string>
     <string name="checkout_branch">Checkout Branch</string>
     <string name="merge_branch">Merge Branch</string>
+    <string name="init_repo">Initialize Repository</string> <!-- Add this -->
     <string name="schedule_task">Schedule Task</string>
 
     <!-- Other strings -->
