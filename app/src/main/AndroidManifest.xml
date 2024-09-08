@@ -14,8 +14,8 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidDevToolApp">
 
@@ -30,11 +30,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Optional: Service Declaration (if necessary for Job Intent) -->
-        <service
-            android:name=".ScheduledTaskWorker"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
-
     </application>
 </manifest>
+
