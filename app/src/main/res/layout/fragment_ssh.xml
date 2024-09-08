@@ -4,6 +4,12 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/icon_ssh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_task" />
+
     <EditText
         android:id="@+id/editTextHost"
         android:layout_width="match_parent"
@@ -35,34 +41,9 @@
         android:layout_height="wrap_content"
         android:hint="Enter command" />
 
-   ```xml
     <Button
         android:id="@+id/buttonExecuteCommand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Execute Command" />
-
-    <Button
-        android:id="@+id/buttonSaveScript"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Script" />
-
-    <Button
-        android:id="@+id/buttonViewScripts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Scripts" />
-
-    <EditText
-        android:id="@+id/editTextExecuteFilePath"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="File Path to Execute" />
-
-    <Button
-        android:id="@+id/buttonExecuteFile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Execute File" />
 </LinearLayout>
