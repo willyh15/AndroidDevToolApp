@@ -39,4 +39,5 @@
         android:name="com.example.androiddevtoolapp.ScheduleTaskFragment"
         android:label="Schedule Task"
         tools:layout="@layout/fragment_schedule_task" />
+
 </navigation>
