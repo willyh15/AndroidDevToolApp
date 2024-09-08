@@ -50,6 +50,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    // Align all Kotlin dependencies to the same version
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
+
     // Additional dependencies
     implementation 'com.jcraft:jsch:0.1.55'  // For SSH functionality
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'  // For GitHub API
@@ -67,29 +72,3 @@ dependencies {
     // MultiDex support
     implementation 'androidx.multidex:multidex:2.0.1'
 }
-
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'  // Update to a version that supports SDK 34
-    }
-}
-
-allprojects {
-    repositories {
-        google()  // Google's Maven repository
-        mavenCentral()  // Maven Central repository
-    }
-
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-        }
-    }
-}
-
-gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
-gradle.startParameter.warningMode = WarningMode.All
