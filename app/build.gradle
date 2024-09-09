@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileSdkVersion 34  // Add this line to specify the SDK version
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
