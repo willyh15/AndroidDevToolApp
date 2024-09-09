@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8  // or other versions like VERSION_17
-        targetCompatibility JavaVersion.VERSION_1_8  // ensure compatibility with older versions
+        sourceCompatibility = JavaVersion.VERSION_17  // Ensure you use '=' for assignment
+        targetCompatibility = JavaVersion.VERSION_17  // Ensure you use '=' for assignment
     }
-    // Java toolchain configuration to support Java 22
+    
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(22)
