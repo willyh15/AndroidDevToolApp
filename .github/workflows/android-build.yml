@@ -47,13 +47,17 @@ jobs:
     - name: Clean Build and Wrapper
       run: ./gradlew clean --stacktrace --console=plain --warning-mode=summary
 
+    # Lint the project to catch issues
+    - name: Run Android Lint
+      run: ./gradlew lint --stacktrace --console=plain
+
     # Assemble Debug APK (after cleaning the project)
     - name: Assemble Debug APK
       run: ./gradlew assembleDebug --stacktrace --console=plain --warning-mode=summary
 
-    # Build with Gradle (with optimized logging)
-    - name: Build with Gradle (quiet)
-      run: ./gradlew build --stacktrace --console=plain --warning-mode=summary
+    # Build with Gradle (with detailed logging)
+    - name: Build with Gradle (debug)
+      run: ./gradlew build --debug --stacktrace --console=plain --warning-mode=all
 
     # Run unit tests with simplified logs
     - name: Run Unit Tests
