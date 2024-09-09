@@ -1,11 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion "34.0.0"
-    compileSdkVersion 34
-    defaultConfig {
-        targetSdkVersion 34
-        minSdkVersion 21
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8  // or other versions like VERSION_17
+        targetCompatibility JavaVersion.VERSION_1_8  // ensure compatibility with older versions
+    }
+    // Java toolchain configuration to support Java 22
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(22)
+        }
     }
 }
 
