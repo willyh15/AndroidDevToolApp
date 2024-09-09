@@ -47,6 +47,10 @@ jobs:
     - name: Clean Build and Wrapper
       run: ./gradlew clean --stacktrace --console=plain --warning-mode=summary
 
+    # Assemble Debug APK (after cleaning the project)
+    - name: Assemble Debug APK
+      run: ./gradlew assembleDebug --stacktrace --console=plain --warning-mode=summary
+
     # Build with Gradle (with optimized logging)
     - name: Build with Gradle (quiet)
       run: ./gradlew build --stacktrace --console=plain --warning-mode=summary
