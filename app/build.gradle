@@ -2,41 +2,42 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.example.androiddevtoolapp'
-    compileSdkVersion 34
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.example.androiddevtoolapp"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
-        multiDexEnabled true  // Enable Multi-Dex support for large projects
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildToolsVersion "29.0.3"
+
     buildTypes {
         release {
-            minifyEnabled true  // Enable code shrinking for release builds
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            applicationIdSuffix "" // Ensure no suffix for release builds
         }
         debug {
             debuggable true
             applicationIdSuffix ".debug"
             versionNameSuffix "-DEBUG"
-            minifyEnabled false  // Disable code shrinking in debug builds
+            minifyEnabled false
         }
     }
 
     lintOptions {
-        abortOnError false  // Don’t abort build on lint errors
-        warningsAsErrors true  // Treat all warnings as errors
+        abortOnError false
+        warningsAsErrors true
     }
 
     buildFeatures {
-        viewBinding true  // Enable View Binding
-        dataBinding true  // Enable Data Binding
+        viewBinding true
+        dataBinding true
     }
 
     compileOptions {
@@ -58,11 +59,11 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
-    // Ensure Kotlin standard libraries use the same version
+    // Kotlin Standard Library
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
 
-    // Unit Testing dependencies
+    // Testing dependencies
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -71,7 +72,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 }
 
-// Exclude old versions to prevent conflict
+// Exclude older versions of Kotlin to prevent conflicts
 configurations {
     all {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
