@@ -1,19 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'com.example.androiddevtoolapp'
-    compileSdkVersion 30
-
+    compileSdkVersion 34
     defaultConfig {
-        applicationId "com.example.androiddevtoolapp"
+        targetSdkVersion 34
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        multiDexEnabled true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+}
 
     buildToolsVersion "30"
 
