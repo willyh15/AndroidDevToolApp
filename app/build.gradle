@@ -10,7 +10,7 @@ android {
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(22)  // Java 22 support
+            languageVersion = JavaLanguageVersion.of(21)  // Java 22 support
         }
     }
 
