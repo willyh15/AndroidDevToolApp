@@ -10,14 +10,13 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            java: 11  # Change to Java 11 or later
+            java: 17
           - os: ubuntu-latest
-            java: 22-ea
+            java: 22
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-
     - name: Setup JDK
       uses: actions/setup-java@v3
       with:
@@ -25,52 +24,11 @@ jobs:
         java-version: ${{ matrix.java }}
         cache: gradle
 
-    # Cache Gradle dependencies
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-
-    # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
 
-    # Use Gradle 8.10 wrapper
     - name: Use Gradle 8.10 Wrapper
       run: ./gradlew wrapper --gradle-version 8.10 --distribution-type all
 
-    # Clean build and wrapper
-    - name: Clean Build and Wrapper
-      run: ./gradlew clean --stacktrace --console=plain --warning-mode=summary
-
-    # Lint the project to catch issues
-    - name: Run Android Lint
-      run: ./gradlew lint --stacktrace --console=plain
-
-    # Assemble Debug APK (after cleaning the project)
-    - name: Assemble Debug APK
-      run: ./gradlew assembleDebug --stacktrace --console=plain --warning-mode=summary
-
-    # Build with Gradle (with detailed logging)
-    - name: Build with Gradle (debug)
-      run: ./gradlew build --debug --stacktrace --console=plain --warning-mode=all
-
-    # Run unit tests with simplified logs
-    - name: Run Unit Tests
-      run: ./gradlew test --stacktrace --console=plain --warning-mode=summary
-
-    # Assemble the app for release
-    - name: Assemble Release APK
-      run: ./gradlew assembleRelease --stacktrace --console=plain --warning-mode=summary
-
-    # Archive the built APK
-    - name: Upload APK
-      uses: actions/upload-artifact@v2
-      with:
-        name: android-app
-        path: app/build/outputs/apk/release/app-release.apk
+    - name: Build with Gradle
+      run: ./gradlew build --stacktrace --console=plain
