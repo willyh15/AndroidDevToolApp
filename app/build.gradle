@@ -1,16 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34  // Add this line to specify the SDK version
+    compileSdkVersion 34  // Specify the compile SDK version
     namespace "com.example.androiddevtoolapp"
+    
+    defaultConfig {
+        applicationId "com.example.androiddevtoolapp"
+        minSdkVersion 21  // Minimum SDK version
+        targetSdkVersion 34  // Target SDK version
+    }
+    
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)  // Java 22 support
+            languageVersion = JavaLanguageVersion.of(21)  // Java 21 support
         }
     }
 
