@@ -1,15 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 34
-    }
-
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     java {
@@ -17,6 +11,7 @@ android {
             languageVersion = JavaLanguageVersion.of(22)
         }
     }
+}
 
     buildTypes {
         release {
