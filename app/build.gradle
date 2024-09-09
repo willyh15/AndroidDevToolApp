@@ -17,7 +17,7 @@ android {
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)  // Java 21 support
+            languageVersion = JavaLanguageVersion.of(17)
         }
     }
 
