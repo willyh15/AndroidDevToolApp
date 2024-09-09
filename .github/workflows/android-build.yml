@@ -39,9 +39,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
 
-    # Use Gradle 8.10 wrapper
-    - name: Use Gradle 8.10 Wrapper
-      run: ./gradlew wrapper --gradle-version 8.10 --distribution-type all
+    # Use Gradle 8.1 wrapper
+    - name: Use Gradle 8.1.0 Wrapper
+      run: ./gradlew wrapper --gradle-version 8.1.0 --distribution-type all
 
     # Clean build and wrapper
     - name: Clean Build and Wrapper
