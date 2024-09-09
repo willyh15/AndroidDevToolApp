@@ -10,7 +10,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            java: 8
+            java: 11  # Change to Java 11 or later
           - os: ubuntu-latest
             java: 22-ea
     runs-on: ${{ matrix.os }}
@@ -23,7 +23,7 @@ jobs:
       with:
         distribution: temurin
         java-version: ${{ matrix.java }}
-        cache: gradle  # Change 'sbt' to 'gradle' to match your project
+        cache: gradle
 
     # Cache Gradle dependencies
     - name: Cache Gradle dependencies
