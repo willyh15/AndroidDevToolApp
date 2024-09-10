@@ -8,17 +8,22 @@
         android:id="@+id/editTextRepoName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Repository Name" />
+        android:hint="@string/repository_name"
+        android:minHeight="48dp"
+        android:inputType="text"
+        android:autofillHints="name" />
 
     <EditText
         android:id="@+id/editTextRepoDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Repository Description" />
+        android:hint="@string/repository_description"
+        android:minHeight="48dp"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonCreateRepo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Repository" />
+        android:text="@string/create_repository" />
 </LinearLayout>

@@ -14,7 +14,8 @@
         android:id="@+id/editTextRepoPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Repository Path" />
+        android:hint="Repository Path"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonInitRepo"
@@ -26,7 +27,8 @@
         android:id="@+id/editTextCommitMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Commit Message" />
+        android:hint="Commit Message"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonCommit"
@@ -38,7 +40,8 @@
         android:id="@+id/editTextBranchName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Branch Name" />
+        android:hint="Branch Name"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonCreateBranch"

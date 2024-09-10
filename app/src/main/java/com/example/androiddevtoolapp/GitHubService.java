@@ -1,4 +1,5 @@
-import okhttp3.MediaType;
+package com.example.androiddevtoolapp;
+
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -8,7 +9,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface GitHubService {
+public interface GitHubService<GitHubRepo, WorkflowDispatch, WorkflowsResponse> {
 
     @Headers("Accept: application/vnd.github.v3+json")
     @POST("/user/repos")

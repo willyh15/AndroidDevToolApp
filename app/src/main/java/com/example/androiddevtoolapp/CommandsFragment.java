@@ -1,3 +1,5 @@
+package com.example.androiddevtoolapp;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,26 +8,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 
 public class CommandsFragment extends Fragment {
 
     private EditText editTextCommand;
-    private Button buttonExecuteCommand;
     private ProgressBar progressBar;
 
     public CommandsFragment() {
         // Required empty public constructor
     }
 
-    @Override
+  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_commands, container, false);
 
         // Initialize UI components
         editTextCommand = view.findViewById(R.id.editTextCommand);
-        buttonExecuteCommand = view.findViewById(R.id.buttonExecuteCommand);
+        Button buttonExecuteCommand = view.findViewById(R.id.buttonExecuteCommand);
         progressBar = view.findViewById(R.id.progressBar);
 
         progressBar.setVisibility(View.GONE); // Initially hide progress bar
@@ -51,13 +53,13 @@ public class CommandsFragment extends Fragment {
                 // Simulating execution delay
                 Thread.sleep(2000); 
 
-                getActivity().runOnUiThread(() -> {
+                requireActivity().runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE); // Hide progress bar when done
                     Toast.makeText(getContext(), "Executed: " + command, Toast.LENGTH_SHORT).show();
                 });
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                getActivity().runOnUiThread(() -> {
+                requireActivity().runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Execution failed", Toast.LENGTH_SHORT).show();
                 });

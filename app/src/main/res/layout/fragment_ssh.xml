@@ -14,20 +14,23 @@
         android:id="@+id/editTextHost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Host" />
+        android:hint="Host"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username" />
+        android:hint="Username"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonConnect"
@@ -39,7 +42,8 @@
         android:id="@+id/editTextCommand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter command" />
+        android:hint="Enter command"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonExecuteCommand"

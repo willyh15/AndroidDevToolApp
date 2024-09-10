@@ -8,28 +8,36 @@
         android:id="@+id/icon_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         android:src="@mipmap/ic_task" />
 
     <Spinner
         android:id="@+id/spinnerTaskType"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/editTextTaskDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Task Details" />
+        android:hint="@string/task_details"
+        android:minHeight="48dp"
+        android:autofillHints="text"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/editTextDelay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Delay (minutes)" />
+        android:hint="@string/delay_minutes"
+        android:minHeight="48dp"
+        android:autofillHints="number"
+        android:inputType="number" />
 
     <Button
         android:id="@+id/buttonScheduleTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Schedule Task" />
+        android:text="@string/schedule_task" />
 </LinearLayout>

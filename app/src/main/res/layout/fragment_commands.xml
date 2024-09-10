@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,17 +9,29 @@
         android:id="@+id/icon_command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         android:src="@mipmap/ic_code" />
 
     <EditText
         android:id="@+id/editTextCommand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter command" />
+        android:autofillHints=""
+        android:hint="@string/enter_command"
+        android:inputType="text"
+        android:minHeight="48dp"
+        tools:text="@tools:sample/date/day_of_week" />
 
     <Button
         android:id="@+id/buttonExecuteCommand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Execute Command" />
+        android:text="@string/execute_command"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

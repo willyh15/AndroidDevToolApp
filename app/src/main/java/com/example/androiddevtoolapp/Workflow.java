@@ -1,3 +1,5 @@
+package com.example.androiddevtoolapp;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Workflow {
