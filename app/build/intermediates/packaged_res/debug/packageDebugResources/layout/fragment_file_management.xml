@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/icon_file_management"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_filemanagement" />
+
+    <Button
+        android:id="@+id/buttonListFiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List Files" />
+
+    <ListView
+        android:id="@+id/listViewFiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editTextLocalFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Local File Path" />
+
+    <EditText
+        android:id="@+id/editTextRemoteFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Remote File Path" />
+
+    <Button
+        android:id="@+id/buttonUploadFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload File" />
+
+    <Button
+        android:id="@+id/buttonDownloadFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download File" />
+
+    <EditText
+        android:id="@+id/editTextFileContent"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="File Content"
+        android:gravity="top" />
+
+    <Button
+        android:id="@+id/buttonEditFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit File" />
+
+    <Button
+        android:id="@+id/buttonSaveFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save File" />
+</LinearLayout>

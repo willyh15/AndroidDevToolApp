@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/icon_ssh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_task" />
+
+    <EditText
+        android:id="@+id/editTextHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Host"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/buttonConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect" />
+
+    <EditText
+        android:id="@+id/editTextCommand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter command"
+        android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/buttonExecuteCommand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Execute Command" />
+</LinearLayout>
