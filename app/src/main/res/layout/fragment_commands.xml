@@ -26,8 +26,7 @@
         android:id="@+id/buttonExecuteCommand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/execute_command"
-        />
+        android:text="@string/execute_command" />
 
     <ProgressBar
         android:id="@+id/progressBar"
