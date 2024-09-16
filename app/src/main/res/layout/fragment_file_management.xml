@@ -14,7 +14,7 @@
         android:id="@+id/buttonListFiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List Files" />
+        android:text="@string/list_files" />
 
     <ListView
         android:id="@+id/listViewFiles"
@@ -37,30 +37,30 @@
         android:id="@+id/buttonUploadFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload File" />
+        android:text="@string/upload_file" />
 
     <Button
         android:id="@+id/buttonDownloadFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Download File" />
+        android:text="@string/download_file" />
 
     <EditText
         android:id="@+id/editTextFileContent"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:hint="File Content"
+        android:hint="@string/file_content"
         android:gravity="top" />
 
     <Button
         android:id="@+id/buttonEditFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit File" />
+        android:text="@string/edit_file" />
 
     <Button
         android:id="@+id/buttonSaveFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save File" />
+        android:text="@string/save_file" />
 </LinearLayout>
