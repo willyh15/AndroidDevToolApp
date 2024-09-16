@@ -14,50 +14,50 @@
         android:id="@+id/editTextRepoPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Repository Path"
+        android:hint="@string/repo_path"
         android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonInitRepo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Initialize Repository" />
+        android:text="@string/init_repo" />
 
     <EditText
         android:id="@+id/editTextCommitMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Commit Message"
+        android:hint="@string/commit_message"
         android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonCommit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Commit Changes" />
+        android:text="@string/commit_changes" />
 
     <EditText
         android:id="@+id/editTextBranchName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Branch Name"
+        android:hint="@string/branch_name"
         android:minHeight="48dp" />
 
     <Button
         android:id="@+id/buttonCreateBranch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Branch" />
+        android:text="@string/create_branch" />
 
     <Button
         android:id="@+id/buttonCheckoutBranch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Checkout Branch" />
+        android:text="@string/checkout_branch" />
 
     <Button
         android:id="@+id/buttonMergeBranch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Merge Branch" />
+        android:text="@string/merge_branch" />
 </LinearLayout>
