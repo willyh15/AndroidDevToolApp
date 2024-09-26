@@ -1,4 +1,8 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 android {
     compileSdk 35
@@ -6,10 +10,21 @@ android {
 
     defaultConfig {
         applicationId "com.example.androiddevtoolapp"
-        minSdkVersion 21
+        minSdk 21
         targetSdk 35
+        versionCode 1
+        versionName "1.0"
         signingConfig signingConfigs.debug
         multiDexEnabled true
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        debug {
+            // Keep the debug signing config
+        }
     }
 
     compileOptions {
@@ -36,14 +51,14 @@ android {
         }
     }
 
-    lint {
+    lintOptions {
         abortOnError false
         warningsAsErrors true
     }
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
+        viewBinding true
+        dataBinding true
     }
 }
 
@@ -51,18 +66,36 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // SSH Library
     implementation 'com.jcraft:jsch:0.1.55'
+
+    // Retrofit and Gson for networking
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+
+    // JGit for Git operations
     implementation 'org.eclipse.jgit:org.eclipse.jgit:5.13.0.202109080827-r'
+
+    // Background work manager
     implementation 'androidx.work:work-runtime:2.9.1'
+
+    // Navigation components
     implementation 'androidx.navigation:navigation-fragment-ktx:2.8.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.8.0'
+
+    // Logging interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+
+    // Kotlin standard libraries
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20'
+
+    // Testing libraries
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+
+    // MultiDex support for backward compatibility
     implementation 'androidx.multidex:multidex:2.0.1'
 }
