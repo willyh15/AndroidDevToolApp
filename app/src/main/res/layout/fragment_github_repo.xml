@@ -5,25 +5,30 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextRepoName"
+        android:id="@+id/editTextRepoPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/repository_name"
-        android:minHeight="48dp"
-        android:inputType="text"
-        android:autofillHints="name" />
+        android:hint="@string/repo_path"
+        android:minHeight="48dp" />
 
     <EditText
-        android:id="@+id/editTextRepoDescription"
+        android:id="@+id/editTextFilePath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/repository_description"
-        android:minHeight="48dp"
-        android:inputType="text" />
+        android:hint="File Path"
+        android:minHeight="48dp" />
 
     <Button
-        android:id="@+id/buttonCreateRepo"
+        android:id="@+id/buttonUploadToGitHub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_repository" />
+        android:text="Upload to GitHub" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
 </LinearLayout>
