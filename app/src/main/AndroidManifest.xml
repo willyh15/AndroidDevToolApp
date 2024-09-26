@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.androiddevtoolapp">
 
-    <!-- Permissions -->
+    <!-- Permissions for network access and file management -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- Minimum and Target SDK -->
+    <!-- Minimum and Target SDK Versions -->
     <uses-sdk
         android:minSdkVersion="21"
         android:targetSdkVersion="35" /> <!-- Updated to match build.gradle -->
@@ -31,8 +31,8 @@
             </intent-filter>
         </activity>
 
-        <!-- Add additional activities/services if required -->
-        <!-- Example: Background service -->
+        <!-- Add additional activities if required -->
+        <!-- Example for background services (commented out if not needed) -->
         <!--
         <service android:name=".MyBackgroundService"
                  android:exported="false"/>
