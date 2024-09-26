@@ -21,12 +21,23 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '17'
+        distribution: 'temurin'
 
     - name: Install Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: 35  # Use the appropriate SDK version for your project
-        build-tools: 35.0.0  # Make sure this matches the build tools version you're using
+        api-level: 35  # Make sure this matches your compileSdk version
+        build-tools: 35.0.0  # Ensure this matches your project's build tools version
+
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -39,3 +50,9 @@ jobs:
 
     - name: Run unit tests
       run: ./gradlew test
+
+    - name: Upload build outputs
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: app/build/outputs/
