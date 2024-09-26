@@ -1,5 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.androiddevtoolapp">
+
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -8,7 +9,7 @@
     <!-- Minimum and Target SDK -->
     <uses-sdk
         android:minSdkVersion="21"
-        android:targetSdkVersion="33" />
+        android:targetSdkVersion="35" /> <!-- Updated to match build.gradle -->
 
     <application
         android:allowBackup="true"
@@ -16,7 +17,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndroidDevToolApp">
+        android:theme="@style/Theme.AndroidDevToolApp"
+        android:usesCleartextTraffic="true"> <!-- Allows HTTP connections, remove if not needed -->
 
         <!-- Main Activity Declaration -->
         <activity
@@ -28,6 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Add additional activities/services if required -->
+        <!-- Example: Background service -->
+        <!--
+        <service android:name=".MyBackgroundService"
+                 android:exported="false"/>
+        -->
 
     </application>
 
