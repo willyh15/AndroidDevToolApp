@@ -32,22 +32,45 @@
         android:inputType="textPassword"
         android:minHeight="48dp" />
 
+    <EditText
+        android:id="@+id/editTextPrivateKey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Private Key Path"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:visibility="gone" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupAuth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioButtonPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioButtonKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Key-based Auth" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/buttonConnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connect" />
 
-    <EditText
-        android:id="@+id/editTextCommand"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_command"
-        android:minHeight="48dp" />
-
-    <Button
-        android:id="@+id/buttonExecuteCommand"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/execute_command" />
+        android:visibility="gone" />
+    
 </LinearLayout>
