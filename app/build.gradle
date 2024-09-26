@@ -2,20 +2,16 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdk 35
-// Specify the compile SDK version
     namespace "com.example.androiddevtoolapp"
-    
+
     defaultConfig {
         applicationId "com.example.androiddevtoolapp"
         minSdkVersion 21
-        //noinspection EditedTargetSdkVersion
         targetSdk 35
         signingConfig signingConfigs.debug
-        proguardFiles
-        multiDexEnabled true// Minimum SDK version
-        // Target SDK version
+        multiDexEnabled true
     }
-    
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -40,7 +36,7 @@ android {
         }
     }
 
-    lintOptions {
+    lint {
         abortOnError false
         warningsAsErrors true
     }
@@ -49,7 +45,6 @@ android {
         viewBinding = true
         dataBinding = true
     }
-    buildToolsVersion '35.0.0'
 }
 
 dependencies {
