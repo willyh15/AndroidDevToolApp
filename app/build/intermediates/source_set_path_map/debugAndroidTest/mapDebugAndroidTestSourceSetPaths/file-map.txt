@@ -1,5 +1,0 @@
-com.example.androiddevtoolapp.test.app-jetified-core-1.6.1-0 C:\Users\willh\.gradle\caches\8.10\transforms\796f1bf6e9594053139c6c02af989bbf\transformed\jetified-core-1.6.1\res
-com.example.androiddevtoolapp.test.app-androidTest-1 C:\Users\willh\StudioProjects\AndroidDevToolApp\app\build\generated\res\resValues\androidTest\debug
-com.example.androiddevtoolapp.test.app-mergeDebugAndroidTestResources-2 C:\Users\willh\StudioProjects\AndroidDevToolApp\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.example.androiddevtoolapp.test.app-mergeDebugAndroidTestResources-3 C:\Users\willh\StudioProjects\AndroidDevToolApp\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.example.androiddevtoolapp.test.app-debugAndroidTest-4 C:\Users\willh\StudioProjects\AndroidDevToolApp\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
