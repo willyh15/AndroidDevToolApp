@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +25,8 @@ jobs:
     - name: Install Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: 35  # Ensure this matches your compileSdk version
-        build-tools: 35.0.0  # Ensure this matches your project's build tools version
+        api-level: 35
+        build-tools: 35.0.0
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v2
@@ -45,34 +44,28 @@ jobs:
     - name: Set Gradle version to 8.10
       run: ./gradlew wrapper --gradle-version 8.10
 
-    # Clean the project
     - name: Clean project
       run: ./gradlew clean
 
-    # Build the project and generate a Gradle scan for easier debugging
     - name: Build with Gradle and Generate Build Scan
       run: ./gradlew build --scan --stacktrace --no-daemon
       env:
-        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}  # Add your Gradle Enterprise key to GitHub Secrets for sharing scan reports
+        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
-    # Upload the build scan URL as a GitHub Actions annotation for quick access
     - name: Upload Build Scan URL
       run: |
         SCAN_URL=$(./gradlew --scan --quiet | grep -oP 'https://.*')
         echo "::notice title=Build Scan::${SCAN_URL}"
 
-    # Run unit tests with detailed logs
     - name: Run unit tests
       run: ./gradlew test --info --stacktrace --no-daemon
 
-    # Upload build outputs as artifacts for review
     - name: Upload build outputs
       uses: actions/upload-artifact@v3
       with:
         name: build-artifacts
         path: app/build/outputs/
 
-    # Upload logs as artifacts in case of failure
     - name: Upload logs on failure
       if: failure()
       uses: actions/upload-artifact@v3
