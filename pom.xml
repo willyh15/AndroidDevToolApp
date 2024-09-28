@@ -12,7 +12,6 @@
         <module>app</module>
     </modules>
 
-    <!-- Repositories for Android dependencies -->
     <repositories>
         <repository>
             <id>google</id>
@@ -23,10 +22,14 @@
             <url>https://jcenter.bintray.com/</url>
         </repository>
     </repositories>
-    
+
     <dependencyManagement>
         <dependencies>
-            <!-- Define common dependencies or versions here if needed -->
+            <dependency>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>4.5.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

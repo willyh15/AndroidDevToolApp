@@ -13,19 +13,9 @@
     <groupId>com.example.app</groupId>
     <artifactId>app</artifactId>
     <version>1.0.0</version>
-    <packaging>apk</packaging>
-
-    <!-- Repositories to resolve Android dependencies -->
-    <repositories>
-        <repository>
-            <id>google</id>
-            <url>https://maven.google.com/</url>
-        </repository>
-        <repository>
-            <id>jcenter</id>
-            <url>https://jcenter.bintray.com/</url>
-        </repository>
-    </repositories>
+    
+    <!-- Use the default Maven packaging for the project (POM) -->
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
@@ -50,9 +40,23 @@
         </dependency>
     </dependencies>
 
+    <!-- Add Android Maven Plugin Configuration -->
     <build>
         <plugins>
-            <!-- Specify Android Maven plugins if needed here -->
+            <!-- Android Maven Plugin -->
+            <plugin>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>4.5.0</version>
+                <configuration>
+                    <!-- Update to match your application structure and SDK versions -->
+                    <sdk>
+                        <platform>35</platform>
+                    </sdk>
+                    <deleteConflictingFiles>true</deleteConflictingFiles>
+                </configuration>
+                <extensions>true</extensions>
+            </plugin>
         </plugins>
     </build>
 </project>
