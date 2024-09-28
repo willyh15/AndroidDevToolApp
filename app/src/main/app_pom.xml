@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>AndroidDevToolApp</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>app</artifactId>
+    <packaging>apk</packaging>
+
+    <properties>
+        <android.compileSdkVersion>35</android.compileSdkVersion>
+        <android.targetSdkVersion>35</android.targetSdkVersion>
+        <android.minSdkVersion>21</android.minSdkVersion>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- Core dependencies for Android -->
+        <dependency>
+            <groupId>androidx.core</groupId>
+            <artifactId>core-ktx</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>androidx.appcompat</groupId>
+            <artifactId>appcompat</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.material</groupId>
+            <artifactId>material</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+        <!-- Kotlin dependency -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>4.6.0</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
